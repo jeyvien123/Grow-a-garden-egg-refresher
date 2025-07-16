@@ -1,0 +1,11 @@
+local function refreshEggs()
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    if ReplicatedStorage:FindFirstChild("RefreshEggs") then
+        ReplicatedStorage.RefreshEggs:FireServer()
+        print("Eggs refreshed successfully!")
+    else
+        warn("RefreshEggs function not found!")
+    end
+end
+
+refreshEggs()
