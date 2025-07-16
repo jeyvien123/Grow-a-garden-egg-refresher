@@ -1,0 +1,36 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+
+-- RemoteEvent for rerolling pets
+local PetRerollEvent = Instance.new("RemoteEvent")
+PetRerollEvent.Name = "PetRerollEvent"
+PetRerollEvent.Parent = ReplicatedStorage
+
+-- List of available pets
+local Pets = {"Dog", "Cat", "Rabbit", "Bee", "Bird"}
+
+-- Function to reroll a pet
+local function rerollPet(player)
+    -- You can add checks here (currency, cooldown, etc.)
+    local newPet = Pets[math.random(1, #Pets)]
+
+    -- Assign the new pet to the player (assuming player has a "Pets" folder in their data)
+    local playerPetsFolder = player:FindFirstChild("Pets")
+    if playerPetsFolder then
+        -- Remove current pet(s) or update as needed
+        for _, pet in ipairs(playerPetsFolder:GetChildren()) do
+            pet:Destroy()
+        end
+        -- Add new pet
+        local petInstance = Instance.new("StringValue")
+        petInstance.Name = newPet
+        petInstance.Value = "Owned"
+        petInstance.Parent = playerPetsFolder
+    end
+
+    -- Notify the player of the new pet (you can add more details here)
+    PetRerollEvent:FireClient(player, newPet)
+end
+
+-- Connect the RemoteEvent
+PetRerollEvent.OnServerEvent:Connect(rerollPet)
